@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstdlib>
 
 // TODO: Change typename T to size_t ElementSize.
 
