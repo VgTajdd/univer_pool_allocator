@@ -2,7 +2,7 @@
 
 #include "ChunkAllocator.h"
 
-#ifdef _DEBUG
+#ifdef DEBUG
 #define PRINT_ACTIVITY
 #endif
 

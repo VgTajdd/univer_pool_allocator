@@ -10,6 +10,10 @@ file(GLOB SOURCES
 add_executable(app ${SOURCES})
 target_include_directories(app PUBLIC include)
 
+# Defines.
+list(APPEND DEBUG_DEFINES DEBUG)
+target_compile_definitions(app PRIVATE "$<$<CONFIG:Debug>:${DEBUG_DEFINES}>")
+
 # Tests.
 enable_testing()
 add_subdirectory(tests EXCLUDE_FROM_ALL)
