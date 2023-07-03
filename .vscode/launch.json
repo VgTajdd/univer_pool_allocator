@@ -34,7 +34,8 @@
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
                 }
-            ]
+            ],
+            "preLaunchTask": "${defaultBuildTask}",
         },
         {
             "type": "lldb",
@@ -42,7 +43,8 @@
             "name": "Debug (macOS)",
             "program": "${workspaceFolder}/build/app",
             "args": [],
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "${defaultBuildTask}",
         }
     ]
 }
