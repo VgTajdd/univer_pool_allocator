@@ -2,6 +2,9 @@
 
 #include <cstdint>
 #include <cstdlib>
+#ifdef DEBUG
+#include <cassert>
+#endif
 
 // TODO: Change typename T to size_t ElementSize.
 
@@ -20,6 +23,15 @@ class ChunkAllocator
 public:
 	ChunkAllocator()
 	{
+#ifdef DEBUG
+		assert( sizeof( T ) >= sizeof( uintptr_t ) );
+#endif
+		if ( sizeof( T ) < sizeof( uintptr_t ) )
+		{
+			std::cout << "[ChunkAllocator] Error: sizeof( T ) < sizeof( uintptr_t ). T:" << typeid( T ).name() << " is smaller than uintptr_t." << std::endl;
+			return;
+		}
+
 		m_begin = malloc( sizeof( T ) * Capacity );
 
 		if ( m_begin == nullptr ) return;
@@ -45,17 +57,6 @@ public:
 		}
 	}
 
-	uintptr_t* reinterpretPointer( void* ptr )
-	{
-		return reinterpret_cast<uintptr_t*>( ptr );
-	}
-
-	void* next( void* object )
-	{
-		uintptr_t* ptr{ reinterpretPointer( object ) };
-		return toPointer( *ptr );
-	}
-
 	/**
 	 * @brief This function allocates memory from the chunk allocator.
 	 * This function is thread unsafe.
@@ -73,29 +74,31 @@ public:
 	}
 
 	/**
+	 * @brief This function returns the ChunkAllocator object that comes next in the linked list.
+	 *
+	 * @return ChunkAllocator* A pointer to the next ChunkAllocator object.
+	 */
+	ChunkAllocator* next() const { return m_next; }
+
+	/**
+	 * @brief This function sets the next ChunkAllocator object in the linked list.
+	 *
+	 * @param next A pointer next to the next ChunkAllocator object.
+	 */
+	void setNext( ChunkAllocator* next ) { m_next = next; }
+
+	/**
 	 * @brief This function deallocates memory from the chunk allocator.
 	 *
 	 * @param object The pointer to the memory to be deallocated.
 	 */
 	void deallocate( void* object )
 	{
+		if ( object == nullptr ) return;
 		uintptr_t* ptr{ reinterpretPointer( object ) };
 		*ptr = toAddress( m_head );
 		m_head = object;
 		m_allocatedCount--;
-	}
-
-	ChunkAllocator* next() const { return m_next; }
-	void setNext( ChunkAllocator* n ) { m_next = n; }
-
-	uintptr_t toAddress( void* ptr ) const
-	{
-		return reinterpret_cast<uintptr_t>( ptr );
-	}
-
-	void* toPointer( uintptr_t address ) const
-	{
-		return reinterpret_cast<void*>( address );
 	}
 
 	uintptr_t beginAddress() const
@@ -128,6 +131,28 @@ public:
 	bool contains( void* object ) const
 	{
 		return addressOffset( object ) <= sizeof( T ) * Capacity;
+	}
+
+private:
+	uintptr_t* reinterpretPointer( void* ptr )
+	{
+		return reinterpret_cast<uintptr_t*>( ptr );
+	}
+
+	void* next( void* object )
+	{
+		uintptr_t* ptr{ reinterpretPointer( object ) };
+		return toPointer( *ptr );
+	}
+
+	uintptr_t toAddress( void* ptr ) const
+	{
+		return reinterpret_cast<uintptr_t>( ptr );
+	}
+
+	void* toPointer( uintptr_t address ) const
+	{
+		return reinterpret_cast<void*>( address );
 	}
 
 private:
