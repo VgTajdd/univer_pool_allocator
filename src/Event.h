@@ -1,11 +1,11 @@
 #pragma once
 
-#include "univer_pool_allocator/PoolAllocator.h"
+#include "univer_pool_allocator/MemoryPoolContainer.h"
 
 // #include <iostream>
 // #include <cassert>
 
-using univer::memory::PoolAllocator;
+using univer::memory::MemoryPoolContainer;
 
 class EventPimpl
 {
@@ -34,7 +34,7 @@ private:
 	bool m_isMouseEvent = false;
 	bool m_isKeyboardEvent = false;
 
-	static PoolAllocator<EventPimpl> allocator;
+	static MemoryPoolContainer<EventPimpl> allocator;
 };
 
-PoolAllocator<EventPimpl> EventPimpl::allocator;
+MemoryPoolContainer<EventPimpl> EventPimpl::allocator;

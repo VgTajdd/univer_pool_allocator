@@ -13,18 +13,18 @@
 namespace univer::memory
 {
 template<typename T, size_t ChunkCapacity = 256>
-class PoolAllocator
+class MemoryPoolContainer
 {
 	typedef ChunkAllocator<T, ChunkCapacity> Chunk;
 
 public:
-	PoolAllocator()
+	MemoryPoolContainer()
 	{
 		m_head = new Chunk(); // Preallocate a chunk. This is optional.
 		m_current = m_head;
 	}
 
-	~PoolAllocator()
+	~MemoryPoolContainer()
 	{
 		Chunk* nextToDelete = nullptr;
 		while ( m_head != nullptr )
@@ -59,7 +59,7 @@ public:
 			allocated = (T*) m_current->allocate();
 		}
 #ifdef PRINT_ACTIVITY
-		std::cout << "PoolAllocator::allocate:   [" << m_current->beginAddress() << "] " << m_current->indexObject( allocated )
+		std::cout << "MemoryPoolContainer::allocate:   [" << m_current->beginAddress() << "] " << m_current->indexObject( allocated )
 			<< "|" << ( 100.f ) * m_current->allocatedCount() / ChunkCapacity << std::endl;
 #endif
 		return allocated;
@@ -75,7 +75,7 @@ public:
 				chunk->deallocate( object );
 				m_current = chunk;
 #ifdef PRINT_ACTIVITY
-				std::cout << "PoolAllocator::deallocate: [" << chunk->beginAddress() << "] " << chunk->indexObject( object )
+				std::cout << "MemoryPoolContainer::deallocate: [" << chunk->beginAddress() << "] " << chunk->indexObject( object )
 					<< "|" << ( 100.f ) * chunk->allocatedCount() / ChunkCapacity << std::endl;
 #endif
 				return;

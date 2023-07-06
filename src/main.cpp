@@ -1,6 +1,6 @@
 #include "pkg/pkg.h"
 
-#include "univer_pool_allocator/PoolAllocator.h"
+#include "univer_pool_allocator/MemoryPoolContainer.h"
 #include "Event.h"
 
 #include <memory>
@@ -39,8 +39,17 @@ int main( int, char** )
 			}
 		}
 		{
-			PoolAllocator<EventPimpl> allocator;
+			MemoryPoolContainer<EventPimpl> allocator;
 			std::shared_ptr<EventPimpl> ptr1;
+		}
+		{
+			univer::memory::ChunkAllocator<int> allocator;
+			for ( int i = 0; i < 128; i++ )
+			{
+				allocator.allocate();
+			}
+			allocator.deallocate( nullptr );
+			float capacity{ (float) allocator.allocatedCount() / allocator.count() };
 		}
 	}
 
