@@ -2,8 +2,10 @@
 
 #include <cstdint>
 #include <cstdlib>
+
 #ifdef DEBUG
 #include <cassert>
+#include <iostream>
 #endif
 
 // TODO: Change typename T to size_t ElementSize.
@@ -28,7 +30,9 @@ public:
 #endif
 		if ( sizeof( T ) < sizeof( uintptr_t ) )
 		{
+#ifdef DEBUG
 			std::cout << "[ChunkAllocator] Error: sizeof( T ) < sizeof( uintptr_t ). T:" << typeid( T ).name() << " is smaller than uintptr_t." << std::endl;
+#endif
 			return;
 		}
 
