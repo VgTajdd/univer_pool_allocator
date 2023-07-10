@@ -1,6 +1,6 @@
 #pragma once
 
-#include "ChunkAllocator.h"
+#include "MemoryPoolChunk.h"
 
 #ifdef DEBUG
 #define PRINT_ACTIVITY
@@ -15,7 +15,7 @@ namespace univer::memory
 template<typename T, size_t ChunkCapacity = 256>
 class MemoryPoolContainer
 {
-	typedef ChunkAllocator<T, ChunkCapacity> Chunk;
+	typedef MemoryPoolChunk<T, ChunkCapacity> Chunk;
 
 public:
 	MemoryPoolContainer()

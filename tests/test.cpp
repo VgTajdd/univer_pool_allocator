@@ -6,7 +6,7 @@ TEST( TestChunkAllocator, Capacity )
 {
 	constexpr std::size_t chunkSize{ 256 };
 	constexpr std::size_t halfChunkSize{ chunkSize / 2 };
-	univer::memory::ChunkAllocator<intptr_t, chunkSize> allocator;
+	univer::memory::MemoryPoolChunk<intptr_t, chunkSize> allocator;
 
 	for ( int i = 0; i < halfChunkSize; i++ )
 	{
@@ -21,7 +21,7 @@ TEST( TestChunkAllocator, Capacity )
 TEST( TestChunkAllocator, Exhaustion )
 {
 	constexpr std::size_t chunkSize{ 256 };
-	univer::memory::ChunkAllocator<intptr_t, chunkSize> allocator;
+	univer::memory::MemoryPoolChunk<intptr_t, chunkSize> allocator;
 
 	for ( int i = 0; i < chunkSize; i++ )
 	{

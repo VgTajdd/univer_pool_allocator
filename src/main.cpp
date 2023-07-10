@@ -43,7 +43,7 @@ int main( int, char** )
 			std::shared_ptr<EventPimpl> ptr1;
 		}
 		{
-			univer::memory::ChunkAllocator<EventPimpl> allocator;
+			univer::memory::MemoryPoolChunk<EventPimpl> allocator;
 			for ( int i = 0; i < 128; i++ )
 			{
 				allocator.allocate();

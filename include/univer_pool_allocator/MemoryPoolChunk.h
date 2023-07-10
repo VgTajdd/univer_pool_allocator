@@ -20,10 +20,10 @@ namespace univer::memory
  * @tparam Capacity The capacity of the chunk allocator (number of elements, not bytes).
  */
 template<typename T, size_t Capacity = 256>
-class ChunkAllocator
+class MemoryPoolChunk
 {
 public:
-	ChunkAllocator()
+	MemoryPoolChunk()
 	{
 #ifdef DEBUG
 		assert( sizeof( T ) >= sizeof( uintptr_t ) );
@@ -31,7 +31,7 @@ public:
 		if ( sizeof( T ) < sizeof( uintptr_t ) )
 		{
 #ifdef DEBUG
-			std::cout << "[ChunkAllocator] Error: sizeof( T ) < sizeof( uintptr_t ). T:" << typeid( T ).name() << " is smaller than uintptr_t." << std::endl;
+			std::cout << "[MemoryPoolChunk] Error: sizeof( T ) < sizeof( uintptr_t ). T:" << typeid( T ).name() << " is smaller than uintptr_t." << std::endl;
 #endif
 			return;
 		}
@@ -53,7 +53,7 @@ public:
 		m_allocatedCount = 0;
 	}
 
-	~ChunkAllocator()
+	~MemoryPoolChunk()
 	{
 		if ( m_begin != nullptr )
 		{
@@ -78,18 +78,18 @@ public:
 	}
 
 	/**
-	 * @brief This function returns the ChunkAllocator object that comes next in the linked list.
+	 * @brief This function returns the MemoryPoolChunk object that comes next in the linked list.
 	 *
-	 * @return ChunkAllocator* A pointer to the next ChunkAllocator object.
+	 * @return MemoryPoolChunk* A pointer to the next MemoryPoolChunk object.
 	 */
-	ChunkAllocator* next() const { return m_next; }
+	MemoryPoolChunk* next() const { return m_next; }
 
 	/**
-	 * @brief This function sets the next ChunkAllocator object in the linked list.
+	 * @brief This function sets the next MemoryPoolChunk object in the linked list.
 	 *
-	 * @param next A pointer next to the next ChunkAllocator object.
+	 * @param next A pointer next to the next MemoryPoolChunk object.
 	 */
-	void setNext( ChunkAllocator* next ) { m_next = next; }
+	void setNext( MemoryPoolChunk* next ) { m_next = next; }
 
 	/**
 	 * @brief This function deallocates memory from the chunk allocator.
@@ -163,6 +163,6 @@ private:
 	void* m_head = nullptr;
 	void* m_begin = nullptr;
 	size_t m_allocatedCount = 0;
-	ChunkAllocator* m_next = nullptr; // TODO: Remove this.
+	MemoryPoolChunk* m_next = nullptr; // TODO: Remove this.
 };
 }
