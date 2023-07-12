@@ -12,6 +12,12 @@
 
 namespace univer::memory
 {
+/**
+* @brief This class implements a memory pool container (contains chunks).
+*
+* @tparam T Template type.
+* @tparam ChunkCapacity The capacity of the chunk allocator (number of elements, not bytes).
+*/
 template<typename T, size_t ChunkCapacity = 256>
 class MemoryPoolContainer
 {
@@ -58,10 +64,7 @@ public:
 			m_current = newAllocator;
 			allocated = (T*) m_current->allocate();
 		}
-#ifdef PRINT_ACTIVITY
-		std::cout << "MemoryPoolContainer::allocate:   [" << m_current->beginAddress() << "] " << m_current->indexObject( allocated )
-			<< "|" << ( 100.f ) * m_current->allocatedCount() / ChunkCapacity << std::endl;
-#endif
+		report( m_current, allocated, true );
 		return allocated;
 	}
 
@@ -74,14 +77,22 @@ public:
 			{
 				chunk->deallocate( object );
 				m_current = chunk;
-#ifdef PRINT_ACTIVITY
-				std::cout << "MemoryPoolContainer::deallocate: [" << chunk->beginAddress() << "] " << chunk->indexObject( object )
-					<< "|" << ( 100.f ) * chunk->allocatedCount() / ChunkCapacity << std::endl;
-#endif
+				report( chunk, object, false );
 				return;
 			}
 			chunk = chunk->next();
 		}
+	}
+
+private:
+	void report( Chunk* chunk, void* object, bool alloc ) const
+	{
+#ifdef PRINT_ACTIVITY
+		std::cout << ( alloc ? "MemoryPoolContainer::allocate:  " : "MemoryPoolContainer::deallocate:" )
+			<< " " << typeid( T ).name() << " ["
+			<< chunk->beginAddress() << "] " << chunk->indexObject( object )
+			<< "|" << ( 100.f ) * chunk->allocatedCount() / ChunkCapacity << std::endl;
+#endif
 	}
 
 private:

@@ -12,9 +12,8 @@
 
 namespace univer::memory
 {
-
 /**
- * @brief
+ * @brief This class implements a memory pool chunk.
  *
  * @tparam T Template type.
  * @tparam Capacity The capacity of the chunk allocator (number of elements, not bytes).
