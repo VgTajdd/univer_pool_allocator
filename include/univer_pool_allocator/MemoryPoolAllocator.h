@@ -73,7 +73,7 @@ private:
 };
 
 template<class T>
-MemoryPoolContainer<T>  MemoryPoolAllocator<T>::s_pool;
+MemoryPoolContainer<T> MemoryPoolAllocator<T>::s_pool;
 
 template<class T, class U>
 bool operator==( const MemoryPoolAllocator <T>&, const MemoryPoolAllocator <U>& ) { return true; }
