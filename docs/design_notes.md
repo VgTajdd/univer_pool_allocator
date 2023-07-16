@@ -2,8 +2,8 @@
 
 ## Names
 
-- `BasicAllocator` (`std::allocator` equivalent) -> `templated class <typename T>` -> for vector.
-- `MemoryPoolContainer` (contains chunks) -> `templated static class <typename T or size_t ObjectSize, size_t ChunkCapacity>` -> is used by allocators like `BasicAllocator` or `std::allocator`.
+- `MemoryPoolAllocator` (`std::allocator` equivalent) -> `templated class <typename T>` -> for vector.
+- `MemoryPoolContainer` (contains chunks) -> `templated static class <typename T or size_t ObjectSize, size_t ChunkCapacity>` -> is used by allocators like `MemoryPoolAllocator` or `std::allocator`.
 - `MemoryPoolChunk` -> allocates memory using single list approach.
 
 generic pool allocator
