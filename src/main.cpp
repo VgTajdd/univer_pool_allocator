@@ -2,10 +2,16 @@
 
 #include "univer_pool_allocator/MemoryPoolContainer.h"
 #include "univer_pool_allocator/MemoryPoolAllocator.h"
+#include "univer_pool_allocator/PoolObject.h"
 #include "EventFromPool.h"
 
 #include <memory>
 #include <vector>
+
+using univer::memory::MemoryPoolAllocator;
+using univer::memory::MemoryPoolContainer;
+using univer::memory::PoolObject;
+using univer::memory::PoolObjectRAII;
 
 int main( int, char** )
 {
@@ -64,6 +70,25 @@ int main( int, char** )
 			univer::memory::MemoryPoolAllocator<Event> allocator;
 			Event* e{ allocator.allocate( 1 ) };
 			allocator.deallocate( e, 1 );
+		}
+		{
+			// std::shared_ptr<PoolObject<Event>> event( new PoolObject<Event> );
+			// std::shared_ptr<PoolObject<Event>> event = std::make_shared<PoolObject<Event>>();
+			// std::unique_ptr<PoolObject<Event>> event = std::make_unique<PoolObject<Event>>();
+			PoolObject<Event>* event = new PoolObject<Event>;
+			event->isHandled();
+			delete event;
+		}
+		{
+			PoolObjectRAII<Event> event;
+			event->isHandled();
+		}
+		{
+			PoolObjectRAII<Event2> event1( false, true );
+			PoolObjectRAII<Event2> event2( false );
+			event1->isHandled();
+			event2->isHandled();
+			event2 = std::move( event1 );
 		}
 	}
 
