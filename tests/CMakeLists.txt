@@ -15,11 +15,11 @@ file(GLOB APP_SOURCES
     "${PROJECT_SOURCE_DIR}/src/pkg/*.cpp"
 )
 
-add_executable(test_template test.cpp ${APP_SOURCES})
-target_link_libraries(test_template gtest_main)
-target_include_directories(test_template
+add_executable(test_pool_allocator test.cpp ${APP_SOURCES})
+target_link_libraries(test_pool_allocator gtest_main)
+target_include_directories(test_pool_allocator
     PRIVATE "${PROJECT_SOURCE_DIR}/include"
 )
 
 include(GoogleTest)
-gtest_discover_tests(test_template)
+gtest_discover_tests(test_pool_allocator)
