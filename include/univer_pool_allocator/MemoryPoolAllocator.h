@@ -8,6 +8,9 @@
 
 #ifdef PRINT_ACTIVITY
 #include <iostream>
+#else
+#include <new>
+#include <limits>
 #endif
 
 namespace univer::memory
