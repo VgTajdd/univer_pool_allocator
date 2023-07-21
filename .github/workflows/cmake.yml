@@ -29,5 +29,5 @@ jobs:
     - name: Test
       working-directory: ${{github.workspace}}/build
       run: |
-        cmake --build ${{github.workspace}}/build/tests --target test_template
+        cmake --build ${{github.workspace}}/build/tests --target test_pool_allocator
         ctest -C ${{env.BUILD_TYPE}} --output-on-failure
