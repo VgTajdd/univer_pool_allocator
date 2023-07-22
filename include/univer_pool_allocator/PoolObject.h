@@ -80,6 +80,7 @@ public:
 	}
 
 	PoolObject<T>* operator->() { return object; }
+	operator bool() { return object != nullptr; }
 
 private:
 	PoolObject<T>* object = nullptr;
