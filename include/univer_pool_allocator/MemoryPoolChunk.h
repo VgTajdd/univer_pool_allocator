@@ -77,20 +77,6 @@ public:
 	}
 
 	/**
-	 * @brief This function returns the MemoryPoolChunk object that comes next in the linked list.
-	 *
-	 * @return MemoryPoolChunk* A pointer to the next MemoryPoolChunk object.
-	 */
-	MemoryPoolChunk* next() const { return m_next; }
-
-	/**
-	 * @brief This function sets the next MemoryPoolChunk object in the linked list.
-	 *
-	 * @param next A pointer next to the next MemoryPoolChunk object.
-	 */
-	void setNext( MemoryPoolChunk* next ) { m_next = next; }
-
-	/**
 	 * @brief This function deallocates memory from the chunk allocator.
 	 *
 	 * @param object The pointer to the memory to be deallocated.
@@ -104,6 +90,20 @@ public:
 		m_allocatedCount--;
 	}
 
+	/**
+	 * @brief This function returns the MemoryPoolChunk object that comes next in the linked list.
+	 *
+	 * @return MemoryPoolChunk* A pointer to the next MemoryPoolChunk object.
+	 */
+	MemoryPoolChunk* next() const { return m_next; }
+
+	/**
+	 * @brief This function sets the next MemoryPoolChunk object in the linked list.
+	 *
+	 * @param next A pointer next to the next MemoryPoolChunk object.
+	 */
+	void setNext( MemoryPoolChunk* next ) { m_next = next; }
+
 	uintptr_t beginAddress() const
 	{
 		return toAddress( m_begin );
@@ -114,7 +114,7 @@ public:
 		return m_allocatedCount;
 	}
 
-	size_t count() const
+	size_t capacity() const
 	{
 		return Capacity;
 	}
