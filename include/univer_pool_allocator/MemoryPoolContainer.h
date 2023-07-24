@@ -26,7 +26,7 @@ class MemoryPoolContainer
 public:
 	MemoryPoolContainer()
 	{
-		m_head = new Chunk(); // Preallocate a chunk. This is optional.
+		m_head = createNewChunk(); // Preallocate a chunk. This is optional.
 		m_current = m_head;
 	}
 
@@ -46,25 +46,30 @@ public:
 		T* allocated = nullptr;
 		if ( m_current != nullptr )
 		{
-			allocated = (T*) m_current->allocate();
+			allocated = static_cast<T*>( m_current->allocate() );
 		}
 		if ( allocated == nullptr )
 		{
-			while ( m_current->next() && allocated == nullptr )
+			auto allocator{ m_head };
+			while ( allocator != nullptr )
 			{
-				allocated = (T*) m_current->next()->allocate();
-				m_current = m_current->next();
+				allocated = static_cast<T*>( allocator->allocate() );
 				if ( allocated ) break;
+				allocator = allocator->next();
 			}
 		}
 		if ( allocated == nullptr )
 		{
-			auto newAllocator{ new Chunk() };
+			auto newAllocator{ createNewChunk() };
 			m_current->setNext( newAllocator );
 			m_current = newAllocator;
-			allocated = (T*) m_current->allocate();
+			allocated = static_cast<T*>( m_current->allocate() );
 		}
 		report( m_current, allocated, true );
+		if ( allocated != nullptr )
+		{
+			m_allocatedCount++;
+		}
 		return allocated;
 	}
 
@@ -78,11 +83,23 @@ public:
 				chunk->deallocate( object );
 				m_current = chunk;
 				report( chunk, object, false );
+				m_allocatedCount--;
 				return;
 			}
 			chunk = chunk->next();
 		}
 	}
+
+	size_t allocatedCount() const
+	{
+		return m_allocatedCount;
+	}
+
+	size_t capacity() const
+	{
+		return m_capacity;
+	}
+
 
 private:
 	void report( Chunk* chunk, void* object, bool alloc ) const
@@ -96,7 +113,19 @@ private:
 	}
 
 private:
+	Chunk* createNewChunk() noexcept
+	{
+#ifdef PRINT_ACTIVITY
+		std::cout << "MemoryPoolContainer::createNewChunk: " << typeid( T ).name() << std::endl;
+#endif
+		m_capacity += ChunkCapacity;
+		return new Chunk();
+	}
+
+private:
 	Chunk* m_current = nullptr;
 	Chunk* m_head = nullptr;
+	size_t m_allocatedCount = 0;
+	size_t m_capacity = 0;
 };
 }
