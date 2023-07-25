@@ -2,20 +2,27 @@
 
 #include "univer_pool_allocator/MemoryPoolContainer.h"
 #include "univer_pool_allocator/MemoryPoolAllocator.h"
+#include "univer_pool_allocator/PoolObject.h"
 #include "Event.h"
+
+using univer::memory::MemoryPoolChunk;
+using univer::memory::MemoryPoolContainer;
+using univer::memory::MemoryPoolAllocator;
+using univer::memory::PoolObject;
+using univer::memory::PoolObjectRAII;
 
 TEST( TestMemoryPoolChunk, Capacity )
 {
 	constexpr std::size_t chunkSize{ 256 };
 	constexpr std::size_t halfChunkSize{ chunkSize / 2 };
-	univer::memory::MemoryPoolChunk<intptr_t, chunkSize> allocator;
+	MemoryPoolChunk<intptr_t, chunkSize> allocator;
 
 	for ( int i = 0; i < halfChunkSize; i++ )
 	{
 		allocator.allocate();
 	}
 
-	float capacity{ (float) allocator.allocatedCount() / allocator.count() };
+	float capacity{ (float) allocator.allocatedCount() / allocator.capacity() };
 
 	EXPECT_EQ( capacity, 0.5f );
 }
@@ -23,7 +30,7 @@ TEST( TestMemoryPoolChunk, Capacity )
 TEST( TestMemoryPoolChunk, Exhaustion )
 {
 	constexpr std::size_t chunkSize{ 256 };
-	univer::memory::MemoryPoolChunk<intptr_t, chunkSize> allocator;
+	MemoryPoolChunk<intptr_t, chunkSize> allocator;
 
 	for ( int i = 0; i < chunkSize; i++ )
 	{
@@ -35,7 +42,7 @@ TEST( TestMemoryPoolChunk, Exhaustion )
 
 TEST( TestMemoryPoolAllocator, TestStdVectorEmptyAndPush )
 {
-	std::vector<Event, univer::memory::MemoryPoolAllocator<Event>> v;
+	std::vector<Event, MemoryPoolAllocator<Event>> v;
 	v.push_back( Event() );
 	const size_t size{ v.size() };
 	EXPECT_EQ( size, 1 );
@@ -43,7 +50,7 @@ TEST( TestMemoryPoolAllocator, TestStdVectorEmptyAndPush )
 
 TEST( TestMemoryPoolAllocator, TestStdVectorPush )
 {
-	std::vector<Event, univer::memory::MemoryPoolAllocator<Event>> v( 8 );
+	std::vector<Event, MemoryPoolAllocator<Event>> v( 8 );
 	v.push_back( Event() );
 	const size_t size{ v.size() };
 	EXPECT_EQ( size, 9 );
@@ -51,22 +58,43 @@ TEST( TestMemoryPoolAllocator, TestStdVectorPush )
 
 TEST( TestMemoryPoolContainer, TestTwoChunks )
 {
-	std::vector<Event, univer::memory::MemoryPoolAllocator<Event>> v( 8 );
-	v.push_back( Event() );
-	const size_t size{ v.size() };
-	EXPECT_EQ( size, 9 );
+	constexpr std::size_t chunkSize{ 256 };
+	MemoryPoolContainer<Event, chunkSize> container;
+	std::vector<Event*> v1, v2;
+	for ( int i = 0; i < chunkSize; i++ )
+	{
+		auto a{ container.allocate() };
+		v1.push_back( a );
+	}
+	EXPECT_EQ( container.capacity(), chunkSize );
+	EXPECT_EQ( container.allocatedCount(), chunkSize );
+	for ( int i = 0; i < chunkSize; i++ )
+	{
+		auto a{ container.allocate() };
+		v2.push_back( a );
+	}
+	EXPECT_EQ( container.capacity(), 2 * chunkSize );
+	EXPECT_EQ( container.allocatedCount(), 2 * chunkSize );
+	for ( int i = 0; i < chunkSize; i++ )
+	{
+		container.deallocate( v1[i] );
+	}
+	EXPECT_EQ( container.capacity(), 2 * chunkSize );
+	EXPECT_EQ( container.allocatedCount(), chunkSize );
+	v1.clear();
+	container.deallocate( v2[0] );
+	EXPECT_EQ( container.allocatedCount(), chunkSize - 1 );
+	for ( int i = 0; i < chunkSize; i++ )
+	{
+		auto a{ container.allocate() };
+		v1.push_back( a );
+	}
+	EXPECT_EQ( container.capacity(), 2 * chunkSize );
+	EXPECT_EQ( container.allocatedCount(), -1 + 2 * chunkSize );
 }
 
-/*
-Tests:
-- TestMemoryPoolChunk
-	- Capacity
-	- Exhaustion
-	- Allocation
-	- Deallocation
-	- Reuse
-- PoolObjectRAII -> MemoryPoolContainer
-	- Allocation
-	- Deallocation
-	- Reuse
-*/
+TEST( PoolObjectRAII, TestWrapper )
+{
+	PoolObjectRAII<Event> event;
+	EXPECT_TRUE( event ? true : false );
+}
