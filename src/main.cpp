@@ -8,8 +8,9 @@
 #include <memory>
 #include <vector>
 
-using univer::memory::MemoryPoolAllocator;
+using univer::memory::MemoryPoolChunk;
 using univer::memory::MemoryPoolContainer;
+using univer::memory::MemoryPoolAllocator;
 using univer::memory::PoolObject;
 using univer::memory::PoolObjectRAII;
 
@@ -50,24 +51,24 @@ int main( int, char** )
 			std::shared_ptr<EventFromPool> ptr1;
 		}
 		{
-			univer::memory::MemoryPoolChunk<EventFromPool> allocator;
+			MemoryPoolChunk<EventFromPool> allocator;
 			for ( int i = 0; i < 128; i++ )
 			{
 				allocator.allocate();
 			}
 			allocator.deallocate( nullptr );
-			float capacity{ (float) allocator.allocatedCount() / allocator.count() };
+			float capacity{ (float) allocator.allocatedCount() / allocator.capacity() };
 		}
 		{
-			std::vector<Event, univer::memory::MemoryPoolAllocator<Event>> v;
+			std::vector<Event, MemoryPoolAllocator<Event>> v;
 			v.push_back( Event() );
 		}
 		{
-			std::vector<Event, univer::memory::MemoryPoolAllocator<Event>> v( 8 );
+			std::vector<Event, MemoryPoolAllocator<Event>> v( 8 );
 			v.push_back( Event() );
 		}
 		{
-			univer::memory::MemoryPoolAllocator<Event> allocator;
+			MemoryPoolAllocator<Event> allocator;
 			Event* e{ allocator.allocate( 1 ) };
 			allocator.deallocate( e, 1 );
 		}
@@ -89,6 +90,14 @@ int main( int, char** )
 			event1->isHandled();
 			event2->isHandled();
 			event2 = std::move( event1 );
+		}
+		{
+			std::vector<PoolObjectRAII<Event2>> v;
+			v.push_back( PoolObjectRAII<Event2>( false, true ) );
+			v.push_back( PoolObjectRAII<Event2>( false, true ) );
+			v.push_back( PoolObjectRAII<Event2>( false, true ) );
+			v.push_back( PoolObjectRAII<Event2>( false, true ) );
+			const auto& a{ v[0] };
 		}
 	}
 
