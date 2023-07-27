@@ -3,7 +3,7 @@
 #include "univer_pool_allocator/MemoryPoolContainer.h"
 #include "univer_pool_allocator/MemoryPoolAllocator.h"
 #include "univer_pool_allocator/PoolObject.h"
-#include "EventFromPool.h"
+#include "Event.h"
 
 #include <memory>
 #include <vector>
@@ -21,37 +21,37 @@ int main( int, char** )
 
 	{
 		{
-			auto a{ new EventFromPool };
-			auto b{ new EventFromPool };
-			auto c{ new EventFromPool };
+			auto a{ new PoolObject<Event> };
+			auto b{ new PoolObject<Event> };
+			auto c{ new PoolObject<Event> };
 			delete c;
 			delete b;
 			delete a;
 		}
 		{
-			auto d{ new EventFromPool };
-			auto e{ new EventFromPool };
+			auto d{ new PoolObject<Event> };
+			auto e{ new PoolObject<Event> };
 			delete d;
 			delete e;
 		}
 		{
-			// auto e{ std::make_shared<EventFromPool>( new EventFromPool ) }; -> Uses placement new.
-			std::shared_ptr<EventFromPool> a( new EventFromPool );
+			// auto e{ std::make_shared<PoolObject<Event>>( new PoolObject<Event> ) }; -> Uses placement new.
+			std::shared_ptr<PoolObject<Event>> a( new PoolObject<Event> );
 		}
 		{
-			std::vector < std::shared_ptr<EventFromPool> > pointers;
+			std::vector < std::shared_ptr<PoolObject<Event>> > pointers;
 			for ( int i = 0; i < 500; i++ )
 			{
-				std::shared_ptr<EventFromPool> a( new EventFromPool );
+				std::shared_ptr<PoolObject<Event>> a( new PoolObject<Event> );
 				pointers.push_back( a );
 			}
 		}
 		{
-			MemoryPoolContainer<EventFromPool> allocator;
-			std::shared_ptr<EventFromPool> ptr1;
+			MemoryPoolContainer<PoolObject<Event>> allocator;
+			std::shared_ptr<PoolObject<Event>> ptr1;
 		}
 		{
-			MemoryPoolChunk<EventFromPool> allocator;
+			MemoryPoolChunk<PoolObject<Event>> allocator;
 			for ( int i = 0; i < 128; i++ )
 			{
 				allocator.allocate();
