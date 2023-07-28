@@ -3,7 +3,6 @@ project(univer_pool_allocator VERSION 0.1.0)
 set(CMAKE_CXX_STANDARD 17)
 
 file(GLOB SOURCES
-    "src/pkg/*.cpp"
     "src/*.cpp"
 )
 
