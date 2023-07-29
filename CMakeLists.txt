@@ -6,13 +6,24 @@ file(GLOB SOURCES
     "src/*.cpp"
 )
 
-add_executable(app ${SOURCES})
-target_include_directories(app PUBLIC include)
+add_library(univer_pool_allocator ${SOURCES})
+target_include_directories(univer_pool_allocator PUBLIC include)
 
 # Defines.
 list(APPEND DEBUG_DEFINES DEBUG)
-target_compile_definitions(app PRIVATE "$<$<CONFIG:Debug>:${DEBUG_DEFINES}>")
+target_compile_definitions(univer_pool_allocator PRIVATE "$<$<CONFIG:Debug>:${DEBUG_DEFINES}>")
+
+# Options.
+option(UVR_POOL_ALLOCATOR_BUILD_TESTS "Build tests" ON)
+option(UVR_POOL_ALLOCATOR_BUILD_EXAMPLES "Build tests" ON)
 
 # Tests.
-enable_testing()
-add_subdirectory(tests EXCLUDE_FROM_ALL)
+if(UVR_POOL_ALLOCATOR_BUILD_TESTS)
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
+# Example.
+if(UVR_POOL_ALLOCATOR_BUILD_EXAMPLES)
+    add_subdirectory(example)
+endif()

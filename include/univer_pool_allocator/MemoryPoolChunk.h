@@ -8,7 +8,8 @@
 #include <iostream>
 #endif
 
-// TODO: Change typename T to size_t ElementSize.
+// TODO: Change typename T to size_t ElementSize/AlignedElementSize.
+// TODO: Replace void* with std::byte*.
 
 namespace univer::memory
 {
@@ -56,7 +57,7 @@ public:
 	{
 		if ( m_begin != nullptr )
 		{
-			free( m_begin );
+			free( m_begin ); m_begin = nullptr;
 		}
 	}
 
@@ -162,6 +163,6 @@ private:
 	void* m_head = nullptr;
 	void* m_begin = nullptr;
 	size_t m_allocatedCount = 0;
-	MemoryPoolChunk* m_next = nullptr; // TODO: Remove this.
+	MemoryPoolChunk* m_next = nullptr;
 };
 }
