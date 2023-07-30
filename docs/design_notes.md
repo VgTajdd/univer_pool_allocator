@@ -10,11 +10,12 @@ generic pool allocator
 
 ## Steps
 
-- [x] buscar custom allocator lib (se puede usar para univer?)
-- [x] pushear el pool memory allocator con restricción acerca del single allocation (se puede crear un fallback allocator con el default allocator para tamaños mayores a 1)
-- [ ] crear tests para esa versión actual
-- [ ] remover el next del chunk (?) no solo sacarlo del mecanismo del allocate, es decir para fines de alloc/dealloc si hay 2 chunks es como si fuera todo continuo, pero el next sirve para tener una referencia por si se quiere hacer un profile y para el delete de todos los chunks
-- [ ] generalizar para distintos tamaños.
+- [x] Research if there are any other curated custom allocator libs on github (is it possible to use any of them in univer?).
+- [x] Push the pool memory allocator with the single allocation specification (it's possible to create un fallback allocator with the default allocator for sizes greater than 1).
+- [x] Implement tests for the actual version.
+- [x] Transform to static library.
+- [ ] Remove the "next" from the chunk (?) -> no, only remove it from allocation logic, that means: for allocation/deallocation purposes, if there are 2 chunks that's like them we a single block. So, the next wil be used if we need a reference for profiling and to delete all the chunks.
+- [ ] Generalize for different sizes.
 
 ## Notes
 
