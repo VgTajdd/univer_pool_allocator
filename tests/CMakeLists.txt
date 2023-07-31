@@ -19,6 +19,7 @@ add_executable(test_pool_allocator test.cpp ${APP_SOURCES})
 target_link_libraries(test_pool_allocator gtest_main)
 target_include_directories(test_pool_allocator
     PRIVATE "${PROJECT_SOURCE_DIR}/include"
+    PRIVATE "${PROJECT_SOURCE_DIR}/example"
 )
 
 include(GoogleTest)
