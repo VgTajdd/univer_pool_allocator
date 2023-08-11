@@ -8,6 +8,14 @@ using univer::memory::MemoryPoolContainer;
 
 namespace univer::memory
 {
+/**
+ * @brief is a wrapper around a T object.
+ * PoolObject<T> creates a static MemoryPoolContainer for each different type T.
+ * This MemoryPoolContainer is used to allocate and deallocate objects of type T (1 object at a time).
+ * PoolObject<T> overrides the default operator new and operator delete to use the container.
+ *
+ * @tparam T the type of the object to wrap.
+ */
 template<typename T>
 class PoolObject : public T
 {
@@ -17,14 +25,14 @@ public:
 
 	void* operator new( size_t size )
 	{
-		auto ptr{ allocator.allocate() };
+		auto ptr{ container.allocate() };
 		return ptr;
 	}
 
 	void operator delete( void* e )
 	{
 		if ( e == nullptr ) return;
-		allocator.deallocate( e );
+		container.deallocate( e );
 	}
 
 	template <typename ...Args>
@@ -34,12 +42,18 @@ public:
 	}
 
 private:
-	static MemoryPoolContainer<T> allocator;
+	static MemoryPoolContainer<T> container;
 };
 
 template<typename T>
-MemoryPoolContainer<T> PoolObject<T>::allocator;
+MemoryPoolContainer<T> PoolObject<T>::container;
 
+/**
+ * @brief This class is a RAII wrapper around PoolObject<T>.
+ * This behaviour is similar to an unique_ptr.
+ *
+ * @tparam T the type of the object to wrap.
+ */
 template<typename T>
 class PoolObjectRAII
 {

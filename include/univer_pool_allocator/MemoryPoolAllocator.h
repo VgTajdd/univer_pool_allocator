@@ -17,19 +17,29 @@ namespace univer::memory
 {
 /**
  * @brief Memory pool allocator.
+ * MemoryPoolAllocator<T> creates a static MemoryPoolContainer for each different type T.
+ * This MemoryPoolContainer is used to allocate and deallocate objects of type T (1 object at a time).
+ * If more than one object of type T is needed in a singe allocation, std::malloc is used.
  *
- * @tparam T Template type.
+ * @tparam T Type of the objects.
  */
 template<class T>
-struct MemoryPoolAllocator
+class MemoryPoolAllocator
 {
+public:
 	typedef T value_type;
 
 	MemoryPoolAllocator() = default;
 
 	template<class U>
-	constexpr MemoryPoolAllocator( const MemoryPoolAllocator <U>& ) noexcept {}
+	constexpr MemoryPoolAllocator( const MemoryPoolAllocator<U>& ) noexcept {}
 
+	/**
+	 * @brief This function allocates n elements of type T.
+	 *
+	 * @param n Number of elements.
+	 * @return T* Pointer to the allocated memory.
+	 */
 	[[nodiscard]] T* allocate( std::size_t n )
 	{
 		if ( n > std::numeric_limits<std::size_t>::max() / sizeof( T ) )
@@ -50,6 +60,12 @@ struct MemoryPoolAllocator
 		throw std::bad_alloc();
 	}
 
+	/**
+	 * @brief This function deallocates n elements of type T.
+	 *
+	 * @param p Pointer to the memory.
+	 * @param n Number of elements.
+	 */
 	void deallocate( T* p, std::size_t n ) noexcept
 	{
 		if ( n == 1 )
@@ -79,8 +95,8 @@ template<class T>
 MemoryPoolContainer<T> MemoryPoolAllocator<T>::s_pool;
 
 template<class T, class U>
-bool operator==( const MemoryPoolAllocator <T>&, const MemoryPoolAllocator <U>& ) { return true; }
+bool operator==( const MemoryPoolAllocator<T>&, const MemoryPoolAllocator<U>& ) { return true; }
 
 template<class T, class U>
-bool operator!=( const MemoryPoolAllocator <T>&, const MemoryPoolAllocator <U>& ) { return false; }
+bool operator!=( const MemoryPoolAllocator<T>&, const MemoryPoolAllocator<U>& ) { return false; }
 }
