@@ -1,5 +1,6 @@
-# Template C++/CMake Project
+# Univer Pool Allocator
 
+Memory pool allocator header-only library.
 Cross-platform CMake based project developed in C++.
 
 [![CMake-CI](https://github.com/VgTajdd/cmake_vscode_template/actions/workflows/cmake.yml/badge.svg?branch=main)](https://github.com/VgTajdd/cmake_vscode_template/actions/workflows/cmake.yml)
@@ -51,7 +52,7 @@ run_tests.sh
 If you prefer to manually run the tests, run the following commands:
 
 ```bash
-cmake --build build/tests --target test_template -j
+cmake --build build/tests --target test_pool_allocator -j
 cd build && ctest --output-on-failure && cd ..
 ```
 
