@@ -14,6 +14,9 @@ generic pool allocator
 - [x] Push the pool memory allocator with the single allocation specification (it's possible to create un fallback allocator with the default allocator for sizes greater than 1).
 - [x] Implement tests for the actual version.
 - [x] Transform to static library.
+
+## Future work
+
 - [ ] Remove the "next" from the chunk (?) -> no, only remove it from allocation logic, that means: for allocation/deallocation purposes, if there are 2 chunks that's like them we a single block. So, the next wil be used if we need a reference for profiling and to delete all the chunks.
 - [ ] Generalize for different sizes.
 
