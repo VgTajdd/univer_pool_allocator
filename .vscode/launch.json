@@ -11,7 +11,7 @@
             "program": "${workspaceFolder}/build/example/Debug/app.exe.",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/build/example/Debug/",
             "environment": [],
             "console": "externalTerminal",
             "preLaunchTask": "${defaultBuildTask}",
@@ -24,7 +24,7 @@
             "program": "${workspaceFolder}/build/example/app",
             "args": [],
             "stopAtEntry": false,
-            "cwd": "${fileDirname}",
+            "cwd": "${workspaceFolder}/build/example/",
             "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
@@ -43,7 +43,7 @@
             "name": "Debug (macOS)",
             "program": "${workspaceFolder}/build/example/app",
             "args": [],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/build/example/",
             "preLaunchTask": "${defaultBuildTask}",
         }
     ]
