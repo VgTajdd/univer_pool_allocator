@@ -83,7 +83,9 @@
         "xtree": "cpp",
         "xutility": "cpp",
         "unordered_set": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "any": "cpp",
+        "variant": "cpp"
     },
     "cSpell.words": [
         "ctest",
