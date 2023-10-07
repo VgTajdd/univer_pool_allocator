@@ -33,7 +33,13 @@ template<class T>
 class MemoryPoolAllocator
 {
 public:
+	typedef T& reference;
+	typedef const T& const_reference;
+	typedef size_t size_type;
+	typedef ptrdiff_t difference_type;
 	typedef T value_type;
+	typedef T* pointer;
+	typedef const T* const_pointer;
 
 	MemoryPoolAllocator() = default;
 
@@ -44,9 +50,9 @@ public:
 	 * @brief This function allocates n elements of type T.
 	 *
 	 * @param n Number of elements.
-	 * @return T* Pointer to the allocated memory.
+	 * @return pointer Pointer to the allocated memory.
 	 */
-	[[nodiscard]] T* allocate( std::size_t n )
+	[[nodiscard]] pointer allocate( std::size_t n )
 	{
 		if ( n > std::numeric_limits<std::size_t>::max() / sizeof( T ) )
 			throw std::bad_array_new_length();
@@ -57,7 +63,7 @@ public:
 			return p;
 		}
 
-		if ( auto p = static_cast<T*>( std::malloc( n * sizeof( T ) ) ) )
+		if ( auto p = static_cast<pointer>( std::malloc( n * sizeof( T ) ) ) )
 		{
 			report( p, n );
 			return p;
@@ -72,7 +78,7 @@ public:
 	 * @param p Pointer to the memory.
 	 * @param n Number of elements.
 	 */
-	void deallocate( T* p, std::size_t n ) noexcept
+	void deallocate( pointer p, std::size_t n ) noexcept
 	{
 		if ( n == 1 )
 		{
@@ -83,7 +89,7 @@ public:
 		std::free( p );
 	}
 private:
-	void report( T* p, std::size_t n, bool alloc = true ) const
+	void report( pointer p, std::size_t n, bool alloc = true ) const
 	{
 #ifdef PRINT_ACTIVITY
 		std::cout << "[MemoryPoolAllocator] "
