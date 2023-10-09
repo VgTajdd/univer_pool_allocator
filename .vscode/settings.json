@@ -85,7 +85,13 @@
         "unordered_set": "cpp",
         "typeindex": "cpp",
         "any": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "*.tcc": "cpp",
+        "cwctype": "cpp",
+        "memory_resource": "cpp",
+        "string_view": "cpp",
+        "numbers": "cpp",
+        "semaphore": "cpp"
     },
     "cSpell.words": [
         "ctest",
