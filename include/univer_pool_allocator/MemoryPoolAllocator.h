@@ -14,10 +14,10 @@
 
 #ifdef PRINT_ACTIVITY
 #include <iostream>
-#else
+#endif
+
 #include <new>
 #include <limits>
-#endif
 
 namespace univer::memory
 {
@@ -52,9 +52,9 @@ public:
 	 * @param n Number of elements.
 	 * @return pointer Pointer to the allocated memory.
 	 */
-	[[nodiscard]] pointer allocate( std::size_t n )
+	[[nodiscard]] pointer allocate( size_type n )
 	{
-		if ( n > std::numeric_limits<std::size_t>::max() / sizeof( T ) )
+		if ( n > std::numeric_limits<size_type>::max() / sizeof( T ) )
 			throw std::bad_array_new_length();
 
 		if ( n == 1 )
@@ -78,7 +78,7 @@ public:
 	 * @param p Pointer to the memory.
 	 * @param n Number of elements.
 	 */
-	void deallocate( pointer p, std::size_t n ) noexcept
+	void deallocate( pointer p, size_type n ) noexcept
 	{
 		if ( n == 1 )
 		{
@@ -89,7 +89,7 @@ public:
 		std::free( p );
 	}
 private:
-	void report( pointer p, std::size_t n, bool alloc = true ) const
+	void report( pointer p, size_type n, bool alloc = true ) const
 	{
 #ifdef PRINT_ACTIVITY
 		std::cout << "[MemoryPoolAllocator] "
