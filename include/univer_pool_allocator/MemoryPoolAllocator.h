@@ -18,6 +18,7 @@
 
 #include <new>
 #include <limits>
+#include <cstddef>
 
 namespace univer::memory
 {
