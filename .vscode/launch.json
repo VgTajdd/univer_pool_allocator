@@ -14,8 +14,8 @@
             "cwd": "${workspaceFolder}/build/example/Debug/",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "${defaultBuildTask}",
-            // "preLaunchTask": "CMake: build", // It's the same.
+            "preLaunchTask": "${defaultBuildTask}"
+            // "preLaunchTask": "CMake: build" // It's the same.
         },
         {
             "name": "Debug (Linux)",
@@ -35,7 +35,7 @@
                     "ignoreFailures": true
                 }
             ],
-            "preLaunchTask": "${defaultBuildTask}",
+            "preLaunchTask": "${defaultBuildTask}"
         },
         {
             "type": "lldb",
@@ -44,7 +44,7 @@
             "program": "${workspaceFolder}/build/example/app",
             "args": [],
             "cwd": "${workspaceFolder}/build/example/",
-            "preLaunchTask": "${defaultBuildTask}",
+            "preLaunchTask": "${defaultBuildTask}"
         }
     ]
 }
